@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -20,7 +22,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public void register(RegisterUserRequest data) {
+    public void create(RegisterUserRequest data) {
        validator.validate(data);
 
        if(userRepository.existsByUsername(data.getUsername())) {
@@ -34,5 +36,15 @@ public class UserService {
        user.setPassword(BCrypt.hashpw(data.getPassword(), BCrypt.gensalt()));
 
        userRepository.save(user);
+    }
+
+    public List<User> getAll() {
+        List<User> users = userRepository.findAll();
+
+        if(users.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        return users;
     }
 }
