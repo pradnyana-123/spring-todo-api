@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
 
-    public boolean existByTitle(String title);
+    public boolean existsByTitle(String title);
     public List<Todo> findTodosByUserId(Integer userId);
 }

@@ -5,10 +5,10 @@ import com.example.spring_todo_api.entity.User;
 import com.example.spring_todo_api.model.CreateTodoRequest;
 import com.example.spring_todo_api.repository.TodoRepository;
 import com.example.spring_todo_api.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -26,11 +26,11 @@ public class TodoService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
+    @Transactional()
     public void create(Integer userId, CreateTodoRequest data) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        boolean existingTodo = todoRepository.existByTitle(data.getTitle());
+        boolean existingTodo = todoRepository.existsByTitle(data.getTitle());
 
         if (existingTodo) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Todo already exists");
