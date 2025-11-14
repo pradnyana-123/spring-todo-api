@@ -1,0 +1,10 @@
+package com.example.spring_todo_api.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class TodoService {
+
+    
+
+}
