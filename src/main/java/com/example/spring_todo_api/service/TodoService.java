@@ -27,6 +27,12 @@ public class TodoService {
     public void create(Integer userId, CreateTodoRequest data) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
+        boolean existingTodo = todoRepository.existsByTitle(data.getTitle());
+
+        if(existingTodo) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Todo already exists");
+        }
+
         Todo todo = new Todo();
 
         todo.setUser(user);
