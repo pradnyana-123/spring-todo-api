@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TodoService {
 
@@ -27,9 +30,9 @@ public class TodoService {
     public void create(Integer userId, CreateTodoRequest data) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        boolean existingTodo = todoRepository.existsByTitle(data.getTitle());
+        boolean existingTodo = todoRepository.existByTitle(data.getTitle());
 
-        if(existingTodo) {
+        if (existingTodo) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Todo already exists");
         }
 
@@ -40,6 +43,16 @@ public class TodoService {
         todo.setDescription(data.getDescription());
 
         todoRepository.save(todo);
+    }
+
+    public List<Todo> getsFromUser(Integer userId) {
+        List<Todo> todos = todoRepository.findTodosByUserId(userId);
+
+        if(todos.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No todos found");
+        }
+
+        return todos;
     }
 
 }
