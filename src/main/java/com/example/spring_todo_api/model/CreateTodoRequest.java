@@ -11,13 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTodoRequest {
 
-
     @NotBlank
     @Size(max = 100)
     private String title;
 
     @NotBlank
     private String description;
-
 
 }
