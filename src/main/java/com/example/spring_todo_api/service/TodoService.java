@@ -72,25 +72,17 @@ public class TodoService {
         return todos;
     }
 
-    public TodoResponse getFromUser(Integer userId) {
-        Todo todo = todoRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No todo found"));
+    public TodoResponse getFromUser(Integer todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No todo found"));
 
         return TodoResponse.builder().title(todo.getTitle()).description(todo.getDescription()).completed(todo.getCompleted()).build();
     }
 
     @Transactional
-    public TodoResponse updateTodo(Integer userId, UpdateTodoRequest data) {
+    public TodoResponse updateTodo(Integer todoId, UpdateTodoRequest data) {
         validator.validate(data);
 
-        User user =  userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-        boolean exists = todoRepository.existsByTitle(data.getTitle());
-
-        if(!exists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found");
-        }
-
-        Todo todo = new Todo();
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found"));
 
         todo.setTitle(data.getTitle());
         todo.setDescription(data.getDescription());
